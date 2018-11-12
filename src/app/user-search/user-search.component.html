@@ -6,6 +6,13 @@
 <br>
 <div class="example-container">
   <mat-form-field>
-    <input matInput placeholder="Favorite food" value="Sushi">
+    <input matInput placeholder="Favorite food" [formControl]="searchBarFormControl"  [matAutocomplete]="auto">
+    <mat-autocomplete #auto="matAutocomplete">
+      <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+        {{option}}
+      </mat-option>
+    </mat-autocomplete>
   </mat-form-field>
 </div>
+<br>
+<span>Value = {{searchBarFormControl.value}}</span>
