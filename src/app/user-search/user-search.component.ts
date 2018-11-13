@@ -2,6 +2,8 @@ import {Component, OnInit} from '@angular/core';
 import {FormControl} from '@angular/forms';
 import {Observable} from 'rxjs';
 import {map, startWith} from 'rxjs/operators';
+import { UserService } from '../user.service';
+
 
 @Component({
   selector: 'app-user-search',
@@ -10,12 +12,15 @@ import {map, startWith} from 'rxjs/operators';
 })
 export class UserSearchComponent implements OnInit {
   searchBarFormControl = new FormControl('');
-  options: string[] = ['One', 'Two', 'Three'];
+  options = [];
   filteredOptions: Observable<string[]>;
 
-  constructor() { }
+  constructor( private _userService: UserService) { }
 
   ngOnInit() {
+    
+    this.options = this._userService.getUsers();
+    
     this.filteredOptions = this.searchBarFormControl.valueChanges
       .pipe(
         startWith(''),
