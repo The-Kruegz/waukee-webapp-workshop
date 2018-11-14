@@ -1,8 +1,23 @@
 <!--The content below is only a placeholder and can be replaced.-->
 <div style="text-align:center">
-  <h1>
-    Welcome to {{ title }}!
-  </h1>
+    <h1>
+        Welcome to {{ title }}!
+    </h1>
+    <div style="display:inline">
+        <button (click)="goToPreviousPage()">
+            Previous
+        </button>
+        <button (click)="goToNextPage()">
+            Next
+        </button>
+    </div>
 </div>
-<app-user-search>
+<h2>
+    {{currentPage | titlecase}}
+</h2>
+<app-login *ngIf="currentPage == 'login'">
+</app-login>
+<app-user-search *ngIf="currentPage == 'user lookup'">
 </app-user-search>
+<app-catalog *ngIf="currentPage == 'catalog'">
+</app-catalog>

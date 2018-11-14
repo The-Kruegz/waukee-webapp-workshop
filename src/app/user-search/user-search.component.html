@@ -1,18 +1,16 @@
-<p>
-  user-search works!
-</p>
-<input placeholder="Favorite food" value="Sushi">
-<br><br>
-<br>
 <div class="example-container">
-  <mat-form-field>
-    <input matInput placeholder="Favorite food" [formControl]="searchBarFormControl"  [matAutocomplete]="auto">
-    <mat-autocomplete #auto="matAutocomplete">
-      <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
-        {{option}}
-      </mat-option>
-    </mat-autocomplete>
-  </mat-form-field>
+    <mat-form-field>
+        <input matInput placeholder="Name" [formControl]="searchBarFormControl"  [matAutocomplete]="auto">
+        <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayName">
+            <mat-option *ngFor="let user of filteredUsers | async" [value]="user">
+                {{user.name}}
+            </mat-option>
+        </mat-autocomplete>
+    </mat-form-field>
 </div>
 <br>
-<span>Value = {{searchBarFormControl.value}}</span>
+<h3>Selection</h3>
+<h5>Name: {{searchBarFormControl.value.name}}</h5>
+<h5>Department: {{searchBarFormControl.value.department}}</h5>
+<h5>Location: {{searchBarFormControl.value.location}}</h5>
+
