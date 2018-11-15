@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 
 
 @Component({
@@ -9,11 +8,7 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 })
 export class CatalogComponent implements OnInit {
 
-    isLinear = false;
-    samplesFormGroup: FormGroup;
-    testsFormGroup: FormGroup;
-
-    constructor(private _formBuilder: FormBuilder) { }
+    constructor() { }
 
     //   this.orders = [packageName: "cold properties", tests: [
     //                 {name:"freezing point", resultTime: "3/7"}, 
@@ -26,12 +21,7 @@ export class CatalogComponent implements OnInit {
 
     ngOnInit() {
         
-        this.samplesFormGroup = this._formBuilder.group({
-            firstCtrl: ['', Validators.required]
-        });
-        this.testsFormGroup = this._formBuilder.group({
-            secondCtrl: ['', Validators.required]
-        });
+
     }
 
 }

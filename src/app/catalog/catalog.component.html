@@ -1,33 +1,9 @@
-<mat-horizontal-stepper [linear]="isLinear" #stepper>
-  <mat-step [stepControl]="samplesFormGroup">
-    <form [formGroup]="samplesFormGroup">
-      <ng-template matStepLabel>Add Samples</ng-template>
-      <mat-form-field>
-        <input matInput placeholder="Last name, First name" formControlName="firstCtrl" required>
-      </mat-form-field>
-      <div>
-        <button mat-button matStepperNext>Next</button>
-      </div>
-    </form>
-  </mat-step>
-  <mat-step [stepControl]="testsFormGroup">
-    <form [formGroup]="testsFormGroup">
-      <ng-template matStepLabel>Fill out your address</ng-template>
-      <mat-form-field>
-        <input matInput placeholder="Address" formControlName="secondCtrl" required>
-      </mat-form-field>
-      <div>
-        <button mat-button matStepperPrevious>Back</button>
-        <button mat-button matStepperNext>Next</button>
-      </div>
-    </form>
-  </mat-step>
-  <mat-step>
-    <ng-template matStepLabel>Done</ng-template>
-    You are now done.
-    <div>
-      <button mat-button matStepperPrevious>Back</button>
-      <button mat-button (click)="stepper.reset()">Reset</button>
-    </div>
-  </mat-step>
-</mat-horizontal-stepper>
+<mat-tab-group>
+    <mat-tab label="1. Add Samples"> 
+        <app-sample-specifier>
+        </app-sample-specifier> 
+
+    </mat-tab>
+    <mat-tab label="2. Specify Tests"> Content 2 </mat-tab>
+    <mat-tab label="3. Review and Confirm"> Content 3 </mat-tab>
+</mat-tab-group>

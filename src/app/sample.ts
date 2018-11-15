@@ -1,7 +1,10 @@
+import { ITestPackage } from './testPackage';
+import { ITest } from './test';
+
+
 export interface ISample {
-    id: number;
     name: string;
     description: string;
-    packages: <ITestPackage[]>;
-    tests: <ITest[]>;
+    packages: ITestPackage[];
+    tests: ITest[];
 }
