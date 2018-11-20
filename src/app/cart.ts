@@ -1,4 +1,5 @@
+import { ISample } from './sample';
+
 export interface ICart {
-    id: number;
     samples: ISample[];
 }

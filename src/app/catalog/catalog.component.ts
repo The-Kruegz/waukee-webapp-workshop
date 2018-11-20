@@ -8,20 +8,13 @@ import { Component, OnInit } from '@angular/core';
 })
 export class CatalogComponent implements OnInit {
 
+    cart;
+    
     constructor() { }
-
-    //   this.orders = [packageName: "cold properties", tests: [
-    //                 {name:"freezing point", resultTime: "3/7"}, 
-    //                 {name:"FBT", resultTime: "2/5"},
-    //                 {name:"KV", resultTime: "2/5"}],
-    //                 packageName: "general", tests: [
-    //                 {name:"t2", resultTime: "3/7"}, 
-    //                 {name:"fzcontent", resultTime: "2/5"},
-    //                 {name:"KV", resultTime: "2/5"}]]
 
     ngOnInit() {
         
-
+        
     }
 
 }

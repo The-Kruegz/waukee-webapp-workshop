@@ -1,7 +1,4 @@
-<table mat-table [dataSource]="samples" class="mat-elevation-z8">
-
-    <!--- Note that these columns can be defined in any order.
-The actual rendered columns are set as a property on the row definition" -->
+<table mat-table [dataSource]="cart.samples" class="mat-elevation-z8">
 
     <!-- Name Column -->
     <ng-container matColumnDef="name">
@@ -40,4 +37,4 @@ The actual rendered columns are set as a property on the row definition" -->
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     <tr mat-footer-row *matFooterRowDef="displayedColumns"></tr>
 </table>
-<ul><li *ngFor="let sample of samples">{{sample.name}}</li></ul>
+<ul><li *ngFor="let sample of cart.samples">{{sample.name}}</li></ul>

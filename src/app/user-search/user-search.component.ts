@@ -6,12 +6,6 @@ import { UserService } from '../user.service';
 import { IUser } from '../user';
 
 
-//export interface User {
-//    name: string;
-//    department: string;
-//    location: string;
-//}
-
 @Component({
     selector: 'app-user-search',
     templateUrl: './user-search.component.html',
@@ -21,7 +15,7 @@ export class UserSearchComponent implements OnInit {
 
     searchBarFormControl = new FormControl('');
     users: IUser[] = [];
-    filteredUsers: IUser[] = [];
+    filteredUsers: Observable<IUser[]>;
 
     constructor( private _userService: UserService) { }
 
