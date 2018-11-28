@@ -1,18 +1,18 @@
 <!--The content below is only a placeholder and can be replaced.-->
-<div style="text-align:center">
+<div class="mat-typography" style="text-align:center">
     <h1>
         Welcome to {{ title }}!
     </h1>
     <div style="display:inline">
-        <button (click)="goToPreviousPage()">
+        <button mat-button (click)="goToPreviousPage()">
             Previous
         </button>
-        <button (click)="goToNextPage()">
+        <button mat-button (click)="goToNextPage()">
             Next
         </button>
     </div>
 </div>
-<h2>
+<h2 class="mat-typography">
     {{currentPage | titlecase}}
 </h2>
 <app-login *ngIf="currentPage == 'login'">

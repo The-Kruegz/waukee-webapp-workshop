@@ -1,16 +1,18 @@
-<div class="example-container">
-    <mat-form-field>
-        <input matInput placeholder="Name" [formControl]="searchBarFormControl"  [matAutocomplete]="auto">
-        <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayName">
-            <mat-option *ngFor="let user of filteredUsers | async" [value]="user">
-                {{user.name}}
-            </mat-option>
-        </mat-autocomplete>
-    </mat-form-field>
+<div class="mat-typography">
+    <div class="example-container">
+        <mat-form-field>
+            <input matInput placeholder="Name" [formControl]="searchBarFormControl"  [matAutocomplete]="auto">
+            <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayName">
+                <mat-option *ngFor="let user of filteredUsers | async" [value]="user">
+                    {{user.name}}
+                </mat-option>
+            </mat-autocomplete>
+        </mat-form-field>
+    </div>
+    <br>
+    <h3>Selection</h3>
+    <h5>Name: {{searchBarFormControl.value.name}}</h5>
+    <h5>Department: {{searchBarFormControl.value.department}}</h5>
+    <h5>Location: {{searchBarFormControl.value.location}}</h5>
 </div>
-<br>
-<h3>Selection</h3>
-<h5>Name: {{searchBarFormControl.value.name}}</h5>
-<h5>Department: {{searchBarFormControl.value.department}}</h5>
-<h5>Location: {{searchBarFormControl.value.location}}</h5>
 

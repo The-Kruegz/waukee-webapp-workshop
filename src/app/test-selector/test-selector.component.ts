@@ -10,6 +10,9 @@ import { MatTable } from '@angular/material';
 import {NestedTreeControl} from '@angular/cdk/tree';
 import {MatTreeNestedDataSource} from '@angular/material/tree';
 import {FormControl} from '@angular/forms';
+import {DomSanitizer} from '@angular/platform-browser';
+import {MatIconRegistry} from '@angular/material';
+
 
 export class TestSelectorNode {
     label: string;
@@ -37,11 +40,16 @@ export class TestSelectorComponent implements OnInit {
     selected: string[] = [];
 
 
-    constructor(private _cartService: CartService) { }
+    constructor(private _cartService: CartService, iconRegistry: MatIconRegistry, sanitizer: DomSanitizer) { 
+        iconRegistry.addSvgIcon('unchecked-box', sanitizer.bypassSecurityTrustResourceUrl('assets/outline-check_box_outline_blank-24px.svg'));
+        iconRegistry.addSvgIcon('checked-box', sanitizer.bypassSecurityTrustResourceUrl('assets/outline-check_box-24px.svg'));
+    }
 
     @ViewChild(MatTable) table: MatTable<any>;
 
     ngOnInit() {
+        console.log('init called');
+        this.selectedSample = '';
 
         this.tests.push(
             {
@@ -57,14 +65,14 @@ export class TestSelectorComponent implements OnInit {
         );
         this.testPackages.push(
             {
-                name: "cold properties",
+                name: "Cold Properties",
                 tests: [
                     {
-                        name: "cloud point",
+                        name: "Cloud Point",
                         resultDate: "3/2"
                     },
                     {
-                        name: "freeze point",
+                        name: "Freeze Point",
                         resultDate: "7/4"
                     },
                     {
@@ -72,7 +80,7 @@ export class TestSelectorComponent implements OnInit {
                         resultDate: "7/5"
                     },
                     {
-                        name: "kerosene value",
+                        name: "Kerosene Value",
                         resultDate: "7/5"
                     }
                 ]
@@ -86,13 +94,12 @@ export class TestSelectorComponent implements OnInit {
         });
 
         this.testPackages.forEach( testPackage => {
-            var newChildren: TestSelectorNode[] = [];
+            let newChildren: TestSelectorNode[] = [];
             testPackage.tests.forEach( test => {
                 newChildren.push({label: test.name, selected:false, children:[]})
             })
             this.treeData.push({label: testPackage.name, selected: false, children: newChildren})
         });
-        console.log(this.treeData);
 
         this.nestedTreeControl = new NestedTreeControl<TestSelectorNode>(this._getChildren);
         this.nestedDataSource = new MatTreeNestedDataSource();
@@ -112,6 +119,62 @@ export class TestSelectorComponent implements OnInit {
         } else {
             this.selectedSample = sample.name;
         }
+        this.reloadTree();
+    }
+    
+    reloadTree() {
+        if (this.selectedSample != '') {
+            let sample = this.cart.samples.find(s => s.name === this.selectedSample);
+            this.treeData.forEach( node => {
+                if (node.children.length === 0) {
+                    if (sample.tests.find(t => t.name === node.label) == undefined)
+                        node.selected = false;
+                    else node.selected = true;
+                }
+                else {
+                    let testPackage = this.testPackages.find(p => p.name === node.label);
+                    let testPackageInCart = sample.packages.find(p => p.name === node.label);
+                    if (testPackageInCart == undefined) {
+                        node.selected = false;
+                        node.children.forEach(childNode => {
+                            childNode.selected = false;
+                        })
+                    } 
+                    else {
+                        let numTestsInPackage = testPackage.tests.length;
+                        let numTestsInPackageInCart = testPackageInCart.tests.length;
+                        if (numTestsInPackage === numTestsInPackageInCart) {
+                            node.selected = true;
+                            node.children.forEach(childNode => {
+                                childNode.selected = true;
+                            })
+                        }
+                        else {
+                            node.selected = false;
+                            node.children.forEach(childNode => {
+                                if (testPackageInCart.tests.find(t => t.name === childNode.label) == undefined)
+                                    childNode.selected = false;
+                                else 
+                                    childNode.selected = true;
+                            })
+                        }              
+                    }  
+                }
+            })
+        } else {
+            this.clearTreeSelections();
+        }
+    }
+    
+    clearTreeSelections() {
+        this.treeData.forEach(node => {
+            node.selected = false;
+            if (node.children.length > 0) {
+                node.children.forEach(childNode => {
+                    childNode.selected = false;
+                })
+            }
+        })
     }
 
     private _getChildren (node: TestSelectorNode) {
@@ -126,6 +189,86 @@ export class TestSelectorComponent implements OnInit {
     noNestedChildren (index: number, node: TestSelectorNode) {
         if (node.children.length == 0) return true;
         else return false;
+    }
+    
+    applySelections() {
+        
+        let sample = this.cart.samples.find(sample => sample.name === this.selectedSample);
+        
+        // clearing the cart of tests
+        let numTests = sample.tests.length;
+        sample.tests.splice(0, numTests);
+        console.log('clearing '+ numTests + 'tests')
+
+        // clearing the cart of packages
+        let numPackages = sample.packages.length;
+        sample.packages.splice(0, numPackages);
+        console.log('clearing '+ numPackages + 'packs')
+        
+        // adding selections made in tree to the cart
+        this.treeData.forEach( node => {
+            if (node.selected == true) {
+                // when selection is not in any package
+                if (node.children.length === 0) {
+                    
+                    // lookup test
+                    let test = JSON.parse(JSON.stringify(this.tests.find( t => t.name === node.label)));
+                    
+                    // add to cart sample
+                    sample.tests.push(test);
+                    
+                }
+                // when a whole package is selected
+                else {
+                    let testPackage = JSON.parse(JSON.stringify(this.testPackages.find( p => p.name === node.label)));
+                    sample.packages.push(testPackage);
+                }
+            }
+            else {
+                // when some tests in a package are selected, but not the whole package
+                if (node.children.length > 0) {
+                    let testPackage = JSON.parse(JSON.stringify(this.testPackages.find( t => t.name === node.label)));
+                    node.children.forEach( childNode => {
+                        if (childNode.selected == true) {
+                            
+                            let test = JSON.parse(JSON.stringify(this.testPackages.find( t => t.name === node.label).tests.find(t => t.name === childNode.label)));
+                                                        
+                            // if package is not in cart, add it and the test
+                            if ( 
+                                sample.packages.find( p => p.name === testPackage.name) == undefined
+                            ) {
+                                console.log('adding package '+ node.label);
+                                
+                                sample.packages.push(testPackage);
+                                
+                                console.log('clearing package '+ node.label);
+                                
+                                testPackage.tests.splice(0,testPackage.tests.length);
+                                
+                                console.log('verify clear ' + sample.packages.find(p => p.name === testPackage.name).tests.length);
+                                
+                                console.log('verify orig not clear ' + this.testPackages.find( p => p.name === testPackage.name).tests.length);
+                                
+                                console.log('adding test '+ test.name);
+                                
+                                // now I add the selected test back in
+                                testPackage.tests.push(test);
+                                
+                                console.log('verify add ' + this.cart.samples.find( s => s.name === this.selectedSample).packages.find(p => p.name === node.label).tests.length);
+                            }
+                            // if package is in cart, we can just add this test if its not already there
+                            else {
+                                
+                                console.log('adding test '+ test.name);
+                                
+                                testPackage.tests.push(test);
+                            }
+                        }
+                    });
+                }
+            }
+        })
+        this._cartService.updateCart(this.cart);
     }
 
     select(node: TestSelectorNode): void {
@@ -150,6 +293,10 @@ export class TestSelectorComponent implements OnInit {
             })
         }
     }
+    
+    printCart() {
+        console.log(this.cart);
+    }
 
     deselect(node: TestSelectorNode): void {
         console.log('selected: ' + node.label);
@@ -173,33 +320,4 @@ export class TestSelectorComponent implements OnInit {
             })
         }
     }
-
-//selectTest(node: ITestPackage | ITest): void {
-//    console.log("selected: " + node.name);
-//    if (typeof node === ITest) {
-//        this.cart.samples.find(sample => sample.name === this.selectedSample).tests.push(node)
-//    }
-//    if (typeof node === ITestPackage) {
-//        this.cart.samples.find(sample => sample.name === this.selectedSample).packages.push(node)
-//    }
-//}
-
-//deselectTest(node: ITestPackage | ITest): void {
-//    if (typeof node === ITest) {
-//        console.log("deselected test: " + node.name);
-//        this.cart.samples.find(sample => sample.name === this.selectedSample).tests.forEach( (test, index) =>  {
-//            if (test.name === node.name) {
-//                this.cart.samples.find(sample => sample.name === this.selectedSample).tests.splice(index, 1);
-//            }
-//        });
-//    }
-//    if (typeof node === ITestPackage) {
-//        console.log("deselected package: " + node.name);
-//        this.cart.samples.find(sample => sample.name === this.selectedSample).packages.forEach( (package, index) =>  {
-//            if (package.name === node.name) {
-//                this.cart.samples.find(sample => sample.name === this.selectedSample).packages.splice(index, 1);
-//            }
-//        });
-//    }
-//}
 }
