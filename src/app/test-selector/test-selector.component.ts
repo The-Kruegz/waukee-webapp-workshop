@@ -38,6 +38,8 @@ export class TestSelectorComponent implements OnInit {
     nestedTreeControl: NestedTreeControl<TestSelectorNode>;
     nestedDataSource: MatTreeNestedDataSource<TestSelectorNode>;
     selected: string[] = [];
+    searchBarInput: string = '';
+//    searchBarFormControl: FormControl;
 
 
     constructor(private _cartService: CartService, iconRegistry: MatIconRegistry, sanitizer: DomSanitizer) { 
@@ -50,7 +52,10 @@ export class TestSelectorComponent implements OnInit {
     @ViewChild(MatTable) table: MatTable<any>;
 
     ngOnInit() {
-        console.log('init called');
+//        this.searchBarFormControl = new FormControl('');
+//        this.searchBarFormControl.registerOnChange((newValue: any) => {
+//            console.log(newValue);
+//        });
         this.selectedSample = '';
 
         this.tests.push(
@@ -114,6 +119,7 @@ export class TestSelectorComponent implements OnInit {
         );
         this.nestedDataSource.data = this.treeData;
     }
+    
 
     rowClicked(sample) {
         if (this.selectedSample == sample.name) {
@@ -294,6 +300,15 @@ export class TestSelectorComponent implements OnInit {
                 }
             })
         }
+    }
+    
+    childContainsSeachInput(node: TestSelectorNode): boolean {
+        let childMatches = false;
+        node.children.forEach( childNode => {
+            if (childNode.label.toLowerCase().includes(this.searchBarInput.toLowerCase()))
+                childMatches = true;
+        })
+        return childMatches;
     }
     
     printCart() {
