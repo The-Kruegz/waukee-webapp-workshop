@@ -33,7 +33,7 @@
     <!-- Search -->
     <span> Search Tests: </span>
     <mat-form-field>
-        <input matInput placeholder="Name" [formControl]="searchBarFormControl" >
+        <input matInput [formControl]="searchBarFormControl" >
     </mat-form-field>
 
     <!-- Treeeee -->
@@ -63,7 +63,8 @@
                     </button>
                     {{node.label}} Package  
                     <button mat-button style="margin-right: 5px" matTreeNodeToggle>
-                        +
+                        <mat-icon *ngIf="nestedTreeControl.isExpanded(node) == false" svgIcon="expand-more"></mat-icon>
+                        <mat-icon *ngIf="nestedTreeControl.isExpanded(node) == true" svgIcon="expand-less"></mat-icon>
                     </button>
                 </div>
                 <ul [class.example-tree-invisible]="!nestedTreeControl.isExpanded(node)">

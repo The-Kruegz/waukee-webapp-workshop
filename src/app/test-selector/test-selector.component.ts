@@ -43,6 +43,8 @@ export class TestSelectorComponent implements OnInit {
     constructor(private _cartService: CartService, iconRegistry: MatIconRegistry, sanitizer: DomSanitizer) { 
         iconRegistry.addSvgIcon('unchecked-box', sanitizer.bypassSecurityTrustResourceUrl('assets/outline-check_box_outline_blank-24px.svg'));
         iconRegistry.addSvgIcon('checked-box', sanitizer.bypassSecurityTrustResourceUrl('assets/outline-check_box-24px.svg'));
+        iconRegistry.addSvgIcon('expand-more', sanitizer.bypassSecurityTrustResourceUrl('assets/twotone-expand_more-24px.svg'));
+        iconRegistry.addSvgIcon('expand-less', sanitizer.bypassSecurityTrustResourceUrl('assets/twotone-expand_less-24px.svg'));
     }
 
     @ViewChild(MatTable) table: MatTable<any>;
