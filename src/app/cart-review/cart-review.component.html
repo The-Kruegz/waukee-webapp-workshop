@@ -2,16 +2,14 @@
     <div *ngFor="let sample of cart.samples">
         <h3 >{{sample.name | titlecase}}</h3>
         <mat-list-item *ngFor="let test of sample.tests">
-            <h4 mat-line>{{test.name}}</h4>
-            <p mat-line> {{test.resultDate}} </p>
+            <p mat-line>{{test.name + "  |  "}}      Results in {{test.resultDate}} days</p>
         </mat-list-item>
         <div *ngFor="let testPackage of sample.packages">
-            <h3>{{testPackage.name}} Package</h3>
-            <mat-list-item *ngFor="let test of testPackage.tests">
-                <span >{{test.name | titlecase}}</span>
-                <span style="margin-left: 5px" span > {{test.resultDate}} </span>
+            <mat-list-item> <p mat-line> {{testPackage.name}} Package </p></mat-list-item>
+            <mat-list-item style="margin-left:30px;"  *ngFor="let test of testPackage.tests">
+                <p mat-line>{{test.name + "  |  "}}      Results in {{test.resultDate}} days</p>
             </mat-list-item>
         </div>
-        <mat-divider [vertical]="true"></mat-divider>
+        <mat-divider></mat-divider>
     </div>
 </mat-list>
